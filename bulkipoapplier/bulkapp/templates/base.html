@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!----======== CSS ======== -->
+        <link rel="stylesheet" href="{% static '/css/style.css' %}">
+        <!----===== Boxicons CSS ===== -->
+        <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+     
+    <title> {% block title%} {% endblock%} </title>
+</head>
+<body>
+    <style>
+        .alert-container {
+            position: absolute ;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 1200px;
+            z-index: 999;
+        }
+    
+        .alert {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+            padding: 0;
+            height: 80px;
+            width: 45%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+        .success {
+            width: 100%;
+            height: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+          
+        }
+        .error{
+            width: 100%;
+            height: 100%;
+            background-color: #f44336;
+            color: white;
+            padding: 20px;
+        }
+      .close1{
+            float: right;
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 20px;
+            color: rgb(243, 239, 239);
+            cursor: pointer;
+            transition: 0.3s;
+            transform: scale(1.25);
+        }
+    
+        .close1:hover{
+            color: rgb(31, 19, 144);
+            transform: scale(1.45);
+        }
+        .alert-text{
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+            padding: 0;
+        }
+       
+    
+    
+    </style>
+
+    {% if messages %}
+//if success message is there then it will show the alert
+    <div class="alert-container">
+        <div class="alert" role="alert">
+            <span class="close1">
+                <i class="bx bx-x-circle" id="close1"  align="right"></i>
+            </span>
+            
+            {% for message in messages %}
+                <div {% if message.tags %} class="{{message.tags}}" {% endif %}>
+                    {% endfor%}
+                    {%for message in messages %}
+                    <p class="alert-text">{{ message }}</p>  
+                    {% endfor %}  
+                </div>
+           
+            
+          
+        </div>
+    </div>
+    {% endif %}
+
+{% comment %} {% if messages.error %}
+    <div class="alert-container">
+        <div class="alert" role="alert">
+            <div class="error">
+                <span class="close1">
+                    <i class="bx bx-x-circle" id="close1"  align="right"></i>
+                </span>
+                {% for message in error %}
+             
+                    <p class="alert-text">{{ message }}</p>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %} {% endcomment %}
+
+
+    
+
+
+   
+    <script>
+
+    var alertContainers = document.querySelectorAll('.alert-container');
+    alertContainers.forEach(function(container) {
+        
+        container.querySelector('.close1').addEventListener('click', function() {
+            container.querySelector('.alert').style.display = 'none';
+        });
+
+        setTimeout(function() {
+            container.querySelector('.alert').style.display = 'none';
+        }, 2000);
+
+    });
+        
+   
+
+
+    </script>
+    
+    {% block content %} {% endblock %}
+</body>
+</html>

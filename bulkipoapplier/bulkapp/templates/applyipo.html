@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Apply For IPO{% endblock %}
+{% block content %}
+{% load static %}
+{%include 'nav.html' %}
+<script>
+    document.cookie = "ids=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "qty=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+</script>
+
+<section class="side-content" id="applyipo">
+    <div class="text">
+        <h1>Choose Account And Search IPO</h1>
+        <hr>
+        <div class="dialog">
+
+            <div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{aform.username.label_tag}}
+                        {{aform.username}}
+                    </div>
+                    <div class="form-group">
+                        {{aform.qty.label_tag}}
+                        {{aform.qty}}
+                    </div>
+         
+                    <div class="form-group">
+                        <button type="Submit"  id="searchIpo" class="btn btn-primary">Search IPO</button>
+                    </div>
+                 
+                </form>
+            </div>
+            
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+
+    <footer>
+        <p>© 2023 BulkShare | Made with Django and React by <a href="https://iamprashant.tech" class="link">Prashant
+                Bhandari</a>. All rights reserved</p>
+    </footer>
+</section>
+{% endblock %}
