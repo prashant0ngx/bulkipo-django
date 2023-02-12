@@ -1,0 +1,3 @@
+
+cp -r $IPO_DIR/ipo/Lib/* $IPO_DIR/ipo/Lib
+
