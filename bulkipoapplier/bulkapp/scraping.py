@@ -32,7 +32,7 @@ class web_driver( ):
         # for Heruko deployment
         # self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=self.options)
         options = webdriver.ChromeOptions()
-        options.headless = False # If true then browser will open in background and will not be visible
+        options.headless = True # If true then browser will open in background and will not be visible
         
         # add user agent
         options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36')
