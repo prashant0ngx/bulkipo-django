@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class DmatsAccount(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=40)
     capital = models.IntegerField()
     username = models.IntegerField()
@@ -16,7 +16,6 @@ class DmatsAccount(models.Model):
         return self.name
 
 class Share(models.Model):
-
     username = models.ForeignKey(DmatsAccount, on_delete=models.CASCADE)
     qty = models.IntegerField()
     def __int__(self):

@@ -6,15 +6,20 @@ from .forms import DmatsForm,ApplyShareForm
 from django.contrib.auth.decorators import login_required
 from .models import DmatsAccount, Share
 from .scraping import *
+import threading
+
+
+
+#run in background thread 
+def run_in_background(func):
+    thread = threading.Thread(target=func)
+    thread.start()
+
+
 
 # Create your views here.
 @login_required(login_url='/login/')
 def index(request):
-    #auto open web driver
-    try:
-        close_browser()    
-    except:
-        pass
     return render(request,'home.html')
 
 
@@ -82,16 +87,24 @@ def applyipo(request):
                 capital=dmat.capital
                 username = dmat.username
                 password = dmat.password
+                
                 try:
+                    count=0
                     while web_driver.driver.current_url != "https://meroshare.cdsc.com.np/#/dashboard":
+                        count+=1
                         login(capital,username,password)
-                        sleep(0.5)
+                        sleep(2)
                         if web_driver.driver.current_url == "https://meroshare.cdsc.com.np/#/dashboard":
-                            break
+                            goto_asba()
+                            break    
+                        if web_driver.driver.current_url != "https://meroshare.cdsc.com.np/#/dashboard" and count==5:
+                            messages.error(request,'Could Not Login ! Check your credentials')
+                           
+                            break                      
                 except:
                     messages.error(request,'Could Not Login ! Check your credentials')
                     return redirect('/applyipo/')
-                goto_asba() 
+              
                 qty=aform['qty'].value()
                 response = redirect('/applyshareid/')
                 response.set_cookie('ids',ids)
@@ -116,6 +129,7 @@ def applyipo(request):
 def applyshareid(request):
     if request.method == 'POST':
         ids = request.COOKIES.get('ids')
+
         dmat = DmatsAccount.objects.filter(user=request.user).get(id=ids)
         crn = dmat.crn
         pin = dmat.pin
@@ -124,20 +138,18 @@ def applyshareid(request):
         if web_driver.driver.current_url == 'https://meroshare.cdsc.com.np/#/asba':
             try:
                 ipo_selector(shareId)
+               
             except:
                 messages.error(request,'Looks like you have already applied for this IPO')
                 close_browser()
                 return redirect('/applyipo/')
-            
             try:
                 applySuccess(qty, crn, pin)
                 msg = web_driver.driver.find_element(By.CLASS_NAME,"toast-message").text
                 if "success" in msg:
-                    messages.success(request,msg)  
-                    close_browser() 
+                    messages.success(request,msg)
                     return redirect('/applyipo/')
                 else:
-                    close_browser()
                     messages.error(request, msg)
                     return redirect('/applyipo/') 
             except:

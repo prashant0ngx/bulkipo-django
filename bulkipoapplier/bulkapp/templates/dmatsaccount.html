@@ -31,7 +31,7 @@
                         {% for fm in dform %}
                         <div class="form-group">
                             {{fm.label_tag}}
-                            {{fm}}
+                            {{fm|safe}}
                         </div>
                         {% endfor %}
                         <div class="form-check">

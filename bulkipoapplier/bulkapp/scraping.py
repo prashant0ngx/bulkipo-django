@@ -1,16 +1,20 @@
 from time import sleep
+import threading
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.select import Select
+
+
 import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
 # import Driver installer
 from webdriver_manager.chrome import ChromeDriverManager
-class web_driver():  
+
+class web_driver( ):  
     #for Heruko deployment
     """ options = webdriver.ChromeOptions()
     options.headless = False
@@ -24,10 +28,12 @@ class web_driver():
    
     # function that open the browser
     def open_browser(self):
+        
         # for Heruko deployment
         # self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=self.options)
         options = webdriver.ChromeOptions()
-        options.headless = True
+        options.headless = False # If true then browser will open in background and will not be visible
+        
         # add user agent
         options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36')
         options.add_argument("--start-maximized")
@@ -38,7 +44,7 @@ class web_driver():
         options.add_argument("--no-sandbox")
         chrome_driver_path = ChromeDriverManager().install()
         self.driver= webdriver.Chrome(chrome_driver_path, options=options)
-        self.wait = WebDriverWait(self.driver,15)
+        self.wait = WebDriverWait(self.driver,8)
         self.driver.get("https://meroshare.cdsc.com.np/#/login")
  
 
@@ -64,10 +70,8 @@ def goto_asba():
 
     web_driver.wait.until(EC.url_to_be("https://meroshare.cdsc.com.np/#/asba"))  # Wait until the page url changes to the asba page
 
-
-
 def open_ipo_lister():
-    web_driver.driver.find_element(By.XPATH,'//*[@id="main"]/div/app-asba/div/div[1]/div/div/ul/li[1]').click()
+    web_driver.wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div')))
     web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-applicable-issue")))
     web_driver.driver.implicitly_wait(1)
     IPOlist = web_driver.driver.find_elements(By.CLASS_NAME,"company-name")
@@ -88,9 +92,6 @@ def ipo_selector(ind=''):
 
 
 
-  
-
-
 def bank_selector():
      # wait until the page url changes to other than asba page
     web_driver.wait.until_not(EC.url_to_be("https://meroshare.cdsc.com.np/#/asba"))
@@ -98,22 +99,13 @@ def bank_selector():
     bank_dropdown = Select(web_driver.driver.find_element(By.XPATH,"//*[@name='selectBank']"))
     bank_list = bank_dropdown.options
     print(bank_list)
-    
-    # select the bank
-    web_driver.driver.find_element(By.XPATH,"//*[@id='selectBank']/option[2]").click()
-    
+    if len(bank_list) > 2: 
+        selected_bank = 3
+        web_driver.driver.find_element(By.XPATH,"//*[@id='selectBank']/option[" + str(selected_bank) + "]").click()
+    else:
+        web_driver.driver.find_element(By.XPATH,"//*[@id='selectBank']/option[2]").click()
 
-    """ if len(bank_list) > 2: 
-        banks = []  # list bank accounts
-        index = 1
-        for bank in bank_list:
-            banks.append([index-1, bank.text])
-            index += 1
 
-        banks.pop(0)
-        selected_bank = 2
-        web_driver.driver.find_element(By.XPATH,"//*[@id='selectBank']/option[" + str(selected_bank-1) + "]").click()
-    else: """
         
 def applySuccess(qty,crn,pin):
     appliedKitta = web_driver.driver.find_element(By.NAME,"appliedKitta")
@@ -137,6 +129,14 @@ def applySuccess(qty,crn,pin):
 def close_browser():
     web_driver.driver.close()
     web_driver.driver.quit()
+
+
+
+
+
+
+
+
 
 
 

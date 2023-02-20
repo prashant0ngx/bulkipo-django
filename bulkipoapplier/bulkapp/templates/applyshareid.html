@@ -21,7 +21,7 @@
                         id="id_shareId">
                         <option disabled selected>Select Share Loading...</option>
                         {% for i in ipos %}
-                        <option value="{{ forloop.counter }}"> {{i}}</option>
+                        <option value="{{ forloop.counter }}"> {{i|safe}}</option>
                         {% endfor %}
                     </select>
                 </div>
