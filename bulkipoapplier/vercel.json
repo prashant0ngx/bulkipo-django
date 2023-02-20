@@ -24,12 +24,7 @@
         "dest": "bulkipoapplier/wsgi.py"
       }
     ],
-    "probes": [
-      {
-        "path": "/",
-        "timeout": 5
-      }
-    ]
+   
 
       
   }
