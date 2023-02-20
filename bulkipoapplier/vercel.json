@@ -24,7 +24,12 @@
         "dest": "bulkipoapplier/wsgi.py"
       }
     ],
-    
-    "rewrites": [{ "source": "/(.*)", "destination": "bulkipoapplier/wsgi.py" }]
+    "probes": [
+      {
+        "path": "/",
+        "timeout": 5
+      }
+    ]
+
       
   }
