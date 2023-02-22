@@ -93,14 +93,14 @@ def applyipo(request):
                 while web_driver.driver.current_url != "https://meroshare.cdsc.com.np/#/dashboard":
                     login(capital,username,password)
                     count+=1
-                    sleep(2)
+                    sleep(1)
                     if web_driver.driver.current_url == "https://meroshare.cdsc.com.np/#/dashboard":
                         break
                     if count == 5:
                         break
                 if web_driver.driver.current_url == "https://meroshare.cdsc.com.np/#/dashboard":
                     goto_asba()
-                    sleep(1)
+                    sleep(0.2)
                     response = redirect('/applyshareid/')
                     response.set_cookie('ids',ids)
                     response.set_cookie('qty',qty)

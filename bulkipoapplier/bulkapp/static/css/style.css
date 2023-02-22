@@ -235,7 +235,7 @@ body.dark .sidebar li a:hover .text{
     opacity: 0;
 }
 body.dark .mode .sun-moon i.sun{
-    opacity: ;
+    opacity: 0;
 }
 body.dark .mode .sun-moon i.moon{
     opacity: 0;
@@ -657,6 +657,11 @@ tr{
     
 
 }
+
+
+/* media query */
+
+
 
 
 

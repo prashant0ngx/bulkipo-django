@@ -32,8 +32,8 @@ class web_driver( ):
         # for Heruko deployment
         # self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=self.options)
         options = webdriver.ChromeOptions()
-        options.headless = False
-        #options.add_argument("--headless=new")
+        #options.headless = False
+        options.add_argument("--headless=new")
         
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--start-maximized")
