@@ -18,10 +18,16 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="form-group">
+                        <span style="color:red;">
+                            {{aform.username.errors}}
+                        </span>
                         {{aform.username.label_tag}}
                         {{aform.username|safe}}
                     </div>
                     <div class="form-group">
+                        <span style="color:red;">
+                            {{aform.qty.errors}}
+                        </span>
                         {{aform.qty.label_tag}}
                         {{aform.qty|safe}}
                     </div>
@@ -37,7 +43,7 @@
     </div>
     </div>
 
-
+ 
 
 
 

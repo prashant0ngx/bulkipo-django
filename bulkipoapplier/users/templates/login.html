@@ -1,32 +1,67 @@
-{% extends 'base.html' %}
+<html>
+    <head>
+        <title>Login - Bulkipo</title>
+    </head>
 {% load static %}
-{% block title %}Login{% endblock %}
 
-{% block content %}
-<div class="container">
-    <form method="POST">
-        {% csrf_token %}
-    
-            <legend class="border-bottom mb-4">Login Here</legend>
-            <div class="form-group">
-                {{form.username.label_tag}}
-                {{form.username}}
 
-            </div>
-            <div class="form-group">
-                {{form.password.label_tag}}
-                {{form.password}}
-            </div>
-            
-        <div class="form-group">
-            <button class="btn btn-primary" type="submit">Login</button>
-        </div>
-    </form>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            Need an account ? <a class="ml-2" href="{% url 'register' %}">Sign Up</a>
-        </small>
-    </div>
-</div>
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
 
+{% block content %}
+
+
+<div class="container" id="container">
+	{% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+	<div class="form-container sign-in-container">
+		<form method="POST">
+			<h1>Sign in</h1>
+			<p></p>
+            {% csrf_token %}
+            {% if form.errors %}
+            <p style="color:red;"> Your username and password didn't match. Please try again.</p>
+            {% endif %}
+           
+            
+
+                        {{ form.username.label_tag }}
+                        {{ form.username|safe}}
+                        
+
+                        {{ form.password.label_tag }}
+                        {{ form.password|safe }}  
+                    
+                        
+                        <a href="{% url 'password_reset' %}">Forgot Password?</a>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Login</button>
+                </div>
+                
+            
+           
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			
+			<div class="overlay-panel overlay-right">
+				<h1> Bulk IPO</h1>
+				<p>Signup and start applying ipo in one click.</p>
+				<button class="ghost" id="signUp" onclick=location.href="{% url 'register' %}">Sign Up</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+    
+    {% endblock %}
+</html>
+    
+  

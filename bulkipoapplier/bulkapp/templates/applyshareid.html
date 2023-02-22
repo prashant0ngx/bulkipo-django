@@ -3,9 +3,7 @@
 {% block content %}
 {% load static %}
 {%include 'nav.html' %}
-<!-- <script>
-    document.cookie = "shareid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/applyshareid;";
-</script> -->
+
 <section class="side-content" id="applyipo">
     <div class="text">
         <h1>Choose Share And Appy IPO</h1>
@@ -14,7 +12,7 @@
         <div>
             <form method="Post" id="next-form">
                 {% csrf_token %}
-                {% if ipos %}
+                {% if ipos  %}
                 <div class="form-group">
                     <label for="id_shareId">Select Share:</label>
                     <select name="shareId" class="form-control" data-live-search="true" data-filter="true"
@@ -22,41 +20,19 @@
                         <option disabled selected>Select Share Loading...</option>
                         {% for i in ipos %}
                         <option value="{{ forloop.counter }}"> {{i|safe}}</option>
+                        
                         {% endfor %}
                     </select>
                 </div>
-                {% endif %}
-
-                <!--       {% if banklist %}
-            <div class="form-group">
-                <label for="id_bankId">Select Share:</label>
-                <select name="bankId" class="form-control" data-live-search="true" data-filter="true" id="id_bankId">
-                    <option disabled selected>Select Bank Loading...</option>
-                    {% for i in banklist %}
-                    <option value="{{ forloop.counter }}"> {{i}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            {%endif%} -->
-
-
-
+        
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Apply IPO</button>
                 </div>
+               
+                
+                {% endif %}
 
-<!--                 <script>
-
-                    //when share is selected store selected value in cookie
-                    document.getElementById("id_shareId").addEventListener("change", function () {
-                        var shareid = document.getElementById("id_shareId").value;
-                        document.cookie = "shareid=" + shareid;
-
-                        //update cookie
-                    });
-                </script>
- -->
 
 
 

@@ -32,20 +32,36 @@ class web_driver( ):
         # for Heruko deployment
         # self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=self.options)
         options = webdriver.ChromeOptions()
-        options.headless = True # If true then browser will open in background and will not be visible
-        
-        # add user agent
-        options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36')
-        options.add_argument("--start-maximized")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--disable-gpu")
+        options.headless = False
+        #options.add_argument("--headless=new")
         
         options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--start-maximized")
+        options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-renderer-backgrounding")
+        options.add_argument("--disable-background-timer-throttling")
+        options.add_argument("--disable-backgrounding-occluded-windows")
+        options.add_argument("--disable-client-side-phishing-detection")
+        options.add_argument("--disable-crash-reporter")
+        options.add_argument("--disable-oopr-debug-crash-dump")
+        options.add_argument("--no-crash-upload")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-low-res-tiling")
+        options.add_argument("--log-level=3")
+        options.add_argument("--silent")
+
+        # add user agent
+        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36")
+        
         chrome_driver_path = ChromeDriverManager().install()
         self.driver= webdriver.Chrome(chrome_driver_path, options=options)
-        self.wait = WebDriverWait(self.driver,8)
         self.driver.get("https://meroshare.cdsc.com.np/#/login")
+        self.wait = WebDriverWait(self.driver,8)
+        
  
 
 def login(dp,username,password):
@@ -57,28 +73,32 @@ def login(dp,username,password):
     dpEntry.click()  # Click on the Dp Entry Box
     dpEntry.send_keys(dp)  # Enter the Dp Id
     dpEntry.send_keys(Keys.ENTER)  # Press Enter
-    web_driver.driver.find_element(By.NAME ,"username").send_keys(username)  # Enter the Username
-    web_driver.driver.find_element(By.NAME ,"password").send_keys(password)  # Enter the Password
-    web_driver.driver.find_element(By.CLASS_NAME ,"sign-in").click()        # Click on the Sign In Button
-    # check the url
+    #send keys one by one
+    web_driver.driver.find_element(By.NAME ,"username").send_keys(username)
+    web_driver.driver.find_element(By.NAME ,"password").send_keys(password)
+    web_driver.driver.find_element(By.CLASS_NAME ,"sign-in").click()
 
 
 def goto_asba():
     web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-dashboard")))
     web_driver.wait.until(EC.presence_of_element_located((By.XPATH, "//*[@id='sideBar']/nav/ul/li[8]/a/span")))
     web_driver.driver.find_element(By.XPATH,"//*[@id='sideBar']/nav/ul/li[8]/a/span").click()
-
     web_driver.wait.until(EC.url_to_be("https://meroshare.cdsc.com.np/#/asba"))  # Wait until the page url changes to the asba page
 
 def open_ipo_lister():
-    web_driver.wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div')))
-    web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-applicable-issue")))
-    web_driver.driver.implicitly_wait(1)
-    IPOlist = web_driver.driver.find_elements(By.CLASS_NAME,"company-name")
     ipolist = []
-    for i in IPOlist:
-        ipolist.append(i.text)
-    return ipolist
+    try:
+        web_driver.wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div')))
+        web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-applicable-issue")))
+        web_driver.driver.implicitly_wait(1)
+        IPOlist = web_driver.driver.find_elements(By.CLASS_NAME,"company-name")
+        
+        for i in IPOlist:
+            ipolist.append(i.text)
+        return ipolist
+    except Exception as e:
+        ipolist.append("No IPO are available.")
+        return ipolist
 
 def ipo_selector(ind=''):
     if (ind == 0):
@@ -128,15 +148,3 @@ def applySuccess(qty,crn,pin):
      
 def close_browser():
     web_driver.driver.close()
-    web_driver.driver.quit()
-
-
-
-
-
-
-
-
-
-
-

@@ -35,7 +35,7 @@ def dmatsaccount(request):
             messages.success(request,'Account Added successfully')
             return redirect('/dmatsaccount/')
         else:
-            messages.error(request,'Failed to Add Account')
+            messages.error(request,dform.errors)
             return redirect('/dmatsaccount/')
     else:
         dform = DmatsForm()
@@ -71,59 +71,63 @@ def dmatsdeleteall(request):
 #globally declared 
 @login_required(login_url='/login/')
 def applyipo(request):
-    try:
+
+    if request.method == 'POST':
+        aform = ApplyShareForm(request.POST)
+        
+        if aform.is_valid():
+            aform.save()
+            web_driver.open_browser(web_driver)
+            sleep(2)
+            ids = aform['username'].value()
+            qty=aform['qty'].value()
+
+            dmat = DmatsAccount.objects.filter(user=request.user).get(id=ids)
+            capital=dmat.capital
+            username = dmat.username
+            password = dmat.password
+            
+            
+            try:
+                count = 0
+                while web_driver.driver.current_url != "https://meroshare.cdsc.com.np/#/dashboard":
+                    login(capital,username,password)
+                    count+=1
+                    sleep(2)
+                    if web_driver.driver.current_url == "https://meroshare.cdsc.com.np/#/dashboard":
+                        break
+                    if count == 5:
+                        break
+                if web_driver.driver.current_url == "https://meroshare.cdsc.com.np/#/dashboard":
+                    goto_asba()
+                    sleep(1)
+                    response = redirect('/applyshareid/')
+                    response.set_cookie('ids',ids)
+                    response.set_cookie('qty',qty)
+                    return response
+                else:
+                    messages.error(request,'Could Not Login ! Check your credentials')
+                    return redirect('/applyipo/')
+            except:
+                messages.error(request,'Timeout Error ! Try again later')
+                close_browser()
+                return redirect('/applyipo/')
+        else:
+            messages.error(request,aform.errors)
+            return redirect('/applyipo/')
+    else:
+        aform = ApplyShareForm()
         try:
             close_browser()
         except:
             pass
-        if request.method == 'POST':
-            aform = ApplyShareForm(request.POST)
-            if aform.is_valid():
-                aform.save()
-                web_driver.open_browser(web_driver)
-                sleep(2)
-                ids = aform['username'].value()
-                dmat = DmatsAccount.objects.filter(user=request.user).get(id=ids)
-                capital=dmat.capital
-                username = dmat.username
-                password = dmat.password
-                
-                try:
-                    count=0
-                    while web_driver.driver.current_url != "https://meroshare.cdsc.com.np/#/dashboard":
-                        count+=1
-                        login(capital,username,password)
-                        sleep(2)
-                        if web_driver.driver.current_url == "https://meroshare.cdsc.com.np/#/dashboard":
-                            goto_asba()
-                            break    
-                        if web_driver.driver.current_url != "https://meroshare.cdsc.com.np/#/dashboard" and count==5:
-                            messages.error(request,'Could Not Login ! Check your credentials')
-                           
-                            break                      
-                except:
-                    messages.error(request,'Could Not Login ! Check your credentials')
-                    return redirect('/applyipo/')
-              
-                qty=aform['qty'].value()
-                response = redirect('/applyshareid/')
-                response.set_cookie('ids',ids)
-                response.set_cookie('qty',qty)
-                return response
-    
-            else:
-                messages.error(request,'Failed to Applied Share')
-                return redirect('/applyipo/')
-        else:
-            aform = ApplyShareForm()
-            aform.fields['username'].queryset = DmatsAccount.objects.filter(user=request.user)
+        aform.fields['username'].queryset = DmatsAccount.objects.filter(user=request.user)
+        context = {
+            'aform':aform
+        }
         
-            context = {
-                'aform':aform
-            }
-        return render(request,'applyipo.html',context)
-    except:
-        messages.error(request,'Time out ')
+    return render(request,'applyipo.html',context)
+    
 
 @login_required(login_url='/login/')
 def applyshareid(request):
@@ -138,23 +142,24 @@ def applyshareid(request):
         if web_driver.driver.current_url == 'https://meroshare.cdsc.com.np/#/asba':
             try:
                 ipo_selector(shareId)
-               
             except:
-                messages.error(request,'Looks like you have already applied for this IPO')
-                close_browser()
+                messages.error(request,'Looks like you have already applied for this IPO Or No Ipos Listed')
+                
                 return redirect('/applyipo/')
             try:
                 applySuccess(qty, crn, pin)
                 msg = web_driver.driver.find_element(By.CLASS_NAME,"toast-message").text
                 if "success" in msg:
                     messages.success(request,msg)
+                    
                     return redirect('/applyipo/')
                 else:
                     messages.error(request, msg)
+                   
                     return redirect('/applyipo/') 
             except:
                 messages.error(request,'Could not apply for this IPO')
-                close_browser()     
+                  
         return redirect('/applyipo/')
     else:
         ids = request.COOKIES.get('ids')

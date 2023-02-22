@@ -1,6 +1,7 @@
 from django import forms
 from .models import DmatsAccount, Share
 from django.contrib.auth.models import User
+from admin_searchable_dropdown.filters import AutocompleteFilter
 
 
 
@@ -108,13 +109,16 @@ class DmatsForm(forms.ModelForm):
 ("13500","VISION SECURITIES PVT. LTD")
     
         ]
+        #select tag with search option
+        
+
         self.fields['capital'].widget =(
+          
+
             forms.Select(choices=CHOICES, attrs={'class': 'form-control',
                 'data-live-search':'true',
                 'data-filter':'true',
                 'required':'true',
-
-            
             })
         )
 
