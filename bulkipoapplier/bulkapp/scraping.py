@@ -22,7 +22,8 @@ class web_driver( ):
     def open_browser(self):
         options = FirefoxOptions()
         options.add_argument("--headless")
-        options.add_binary(GeckoDriverManager().install())
+        options.set_capability("moz:firefoxOptions", {"binary": GeckoDriverManager().install()
+        })
         self.driver = webdriver.Firefox(options=options)
         self.driver = webdriver.Firefox()
         self.wait = WebDriverWait(self.driver, 10)
