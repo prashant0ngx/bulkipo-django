@@ -8,6 +8,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
+#webdriver manager
+from webdriver_manager.firefox import GeckoDriverManager
+
+
+
 import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
@@ -17,6 +22,7 @@ class web_driver( ):
     def open_browser(self):
         options = FirefoxOptions()
         options.add_argument("--headless")
+        options.add_binary(GeckoDriverManager().install())
         self.driver = webdriver.Firefox(options=options)
         self.driver = webdriver.Firefox()
         self.wait = WebDriverWait(self.driver, 10)
