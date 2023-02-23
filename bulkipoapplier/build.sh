@@ -1,6 +1,5 @@
 #!/bin/bash
 #activate virtual environment
-source ipo/Scripts/activate
 
 # Install dependencies
 echo "Installing dependencies..."
