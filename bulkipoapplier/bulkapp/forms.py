@@ -1,7 +1,6 @@
 from django import forms
 from .models import DmatsAccount, Share
 from django.contrib.auth.models import User
-from admin_searchable_dropdown.filters import AutocompleteFilter
 
 
 

@@ -22,5 +22,4 @@ urlpatterns = [
     path('', include('users.urls')),
     path('', include('bulkapp.urls')),
     
-
 ]
