@@ -18,12 +18,9 @@ gdown==3.11.0
 h11==0.14.0
 idna==3.4
 kombu==3.0.37
-<<<<<<< HEAD
 mysqlclient==2.1.0
 numpy==1.21.6
 opencv-python==4.7.0.68
-=======
->>>>>>> bc636e09a7bca1179e33d38e63487a394649c56d
 orderedpy==0.0.2
 outcome==1.2.0
 packaging==23.0

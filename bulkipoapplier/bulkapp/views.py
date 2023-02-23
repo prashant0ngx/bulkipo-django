@@ -71,13 +71,13 @@ def dmatsdeleteall(request):
 #globally declared 
 @login_required(login_url='/login/')
 def applyipo(request):
-
     if request.method == 'POST':
         aform = ApplyShareForm(request.POST)
         
         if aform.is_valid():
             aform.save()
             web_driver.open_browser(web_driver)
+            web_driver.driver.get("https://meroshare.cdsc.com.np/#/login")
             sleep(2)
             ids = aform['username'].value()
             qty=aform['qty'].value()

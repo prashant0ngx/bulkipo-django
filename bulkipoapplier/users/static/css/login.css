@@ -108,7 +108,7 @@ form {
 
 input {
 	background-color: #eee;
-	border: none;
+	border: 1px solid #070707;
 	padding: 12px 15px;
 	margin: 8px 0;
 	width: 100%;
@@ -251,10 +251,10 @@ footer{
     left: 0;
     height: 55px;
     width: 100%;
-    background-color:#eee;
+    background-color:#d8d3d3;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 60px;
-    transition: var(--tran-05);
+    box-sizing: border-box;
 }

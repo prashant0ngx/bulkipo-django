@@ -31,13 +31,12 @@
            
             
 
-                        {{ form.username.label_tag }}
-                        {{ form.username|safe}}
+            <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" placeholder="Username">
+
+            <input type="password" name="password" autocomplete="current-password" required="" id="id_password" placeholder="Enter Password">
                         
 
-                        {{ form.password.label_tag }}
-                        {{ form.password|safe }}  
-                    
+                        
                         
                         <a href="{% url 'password_reset' %}">Forgot Password?</a>
                 <div class="form-group">
@@ -60,7 +59,7 @@
 	</div>
 </div>
 <footer>
-    <p>© 2023 BulkShare | Made with Django and React by <a href="https://iamprashant.tech" class="link">Prashant
+    <p>© 2023 BulkShare | Made with Django and React by <a href="https://github.com/prashant0ngx/" class="link">Prashant
             Bhandari</a>. All rights reserved</p>
 </footer>
 

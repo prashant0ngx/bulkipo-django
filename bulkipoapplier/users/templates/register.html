@@ -19,38 +19,38 @@
 			<h1>Sign Up</h1>
 			<p></p>
             {% csrf_token %}
-            <div class="form-group">
+        
                 <span style="color:red;">
                     {{ form.username.errors }}
                 </span>
                 
                 {{ form.username }}
 
-            </div>
-            <div class="form-group">
+           
+         
                 <span style="color:red;">
                     {{ form.email.errors }}
                 </span>
                 
                 {{ form.email }}
 
-            </div>
-            <div class="form-group">
+           
+         
                 <span style="color:red;">
                     {{ form.password1.errors }}
            
                 </span>
            
                 {{ form.password1 }}
-            </div>
-            <div class="form-group">
+          
+           
                 <span style="color:red;">
                     {{ form.password2.errors }}
            
                 </span>
                
                 {{ form.password2 }}
-            </div>
+            
 
        
 
@@ -74,6 +74,10 @@
 	</div>
 
 </div>
+<footer>
+    <p>© 2023 BulkShare | Made with Django and React by <a href="https://github.com/prashant0ngx/" class="link">Prashant
+            Bhandari</a>. All rights reserved</p>
+</footer>
 
     
     {% endblock %}

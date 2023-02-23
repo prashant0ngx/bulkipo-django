@@ -59,7 +59,6 @@ class web_driver( ):
         
         chrome_driver_path = ChromeDriverManager().install()
         self.driver= webdriver.Chrome(chrome_driver_path, options=options)
-        self.driver.get("https://meroshare.cdsc.com.np/#/login")
         self.wait = WebDriverWait(self.driver,8)
         
  
