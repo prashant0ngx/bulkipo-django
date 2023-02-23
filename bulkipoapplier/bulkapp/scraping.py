@@ -14,19 +14,18 @@ import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
 # import Driver installer
-
-
-
+from webdriver_manager.firefox import GeckoDriverManager
 
 class web_driver():  
     #find $PWD -type f -name file4.txt 
     def open_browser(self):
         options = FirefoxOptions()
         options.headless = True
+
         os.environ['MOZ_HEADLESS'] = '1'
         path = os.environ.get('FIREFOX_BIN')
         binary = FirefoxBinary(path)
-        self.driver = webdriver.Firefox(options=options,firefox_binary=binary)
+        self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(),firefox_binary=binary,options=options)
         self.wait = WebDriverWait(self.driver, 10)
 
     
