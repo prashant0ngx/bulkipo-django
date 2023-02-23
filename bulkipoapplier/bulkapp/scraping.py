@@ -11,8 +11,6 @@ from selenium.webdriver.support.select import Select
 import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
-# import Driver installer
-from webdriver_manager.chrome import ChromeDriverManager
 
 class web_driver( ):  
     #for Heruko deployment
@@ -28,37 +26,15 @@ class web_driver( ):
    
     # function that open the browser
     def open_browser(self):
-        
         # for Heruko deployment
-        # self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=self.options)
-        options = webdriver.ChromeOptions()
-        options.headless = False
-        #options.add_argument("--headless=new")
-        
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--start-maximized")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--no-sandbox")
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--disable-renderer-backgrounding")
-        options.add_argument("--disable-background-timer-throttling")
-        options.add_argument("--disable-backgrounding-occluded-windows")
-        options.add_argument("--disable-client-side-phishing-detection")
-        options.add_argument("--disable-crash-reporter")
-        options.add_argument("--disable-oopr-debug-crash-dump")
-        options.add_argument("--no-crash-upload")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--disable-low-res-tiling")
-        options.add_argument("--log-level=3")
-        options.add_argument("--silent")
-
-        # add user agent
-        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36")
-        
-        chrome_driver_path = ChromeDriverManager().install()
-        self.driver= webdriver.Chrome(chrome_driver_path, options=options)
+        self.chrome_options = webdriver.ChromeOptions()
+        self.chrome_options.add_argument("--disable-dev-shm-usage")
+        self.chrome_options.add_argument("--no-sandbox")
+        self.chrome_options.add_argument("--disable-gpu")
+        self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--disable-extensions")
+        self.chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=self.chrome_options)
         self.wait = WebDriverWait(self.driver,8)
         
  
