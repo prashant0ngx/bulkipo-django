@@ -1,4 +1,12 @@
 #!/bin/bash
+#activate virtual environment
+source ipo/Scripts/activate
+
+# Install dependencies
+echo "Installing dependencies..."
+python3.9 -m pip install --upgrade pip
+
+
 
 # Build the project
 echo "Building the project..."
