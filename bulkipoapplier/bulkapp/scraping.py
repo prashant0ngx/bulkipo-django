@@ -8,24 +8,26 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
-#webdriver manager
-from webdriver_manager.firefox import GeckoDriverManager
-
-
 
 import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
 # import Driver installer
+from webdriver_manager.firefox import GeckoDriverManager
+
+
 
 class web_driver( ):  
     def open_browser(self):
         options = FirefoxOptions()
         options.add_argument("--headless")
-        options.set_capability("moz:firefoxOptions", {"binary": GeckoDriverManager().install()
-        })
+        options.add_argument("--window-size=1920,1080")
+
+        
+        self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(),options=options)
         self.driver = webdriver.Firefox(options=options)
-        self.driver = webdriver.Firefox()
+
+      
         self.wait = WebDriverWait(self.driver, 10)
         self.driver.maximize_window()
 
