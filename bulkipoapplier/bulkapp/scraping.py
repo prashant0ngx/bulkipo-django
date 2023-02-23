@@ -51,13 +51,9 @@ class web_driver( ):
         options.add_argument("--disable-low-res-tiling")
         options.add_argument("--log-level=3")
         options.add_argument("--silent")
-
-        
+        options.binary_location(os.environ.get("GOOGLE_CHROME_BIN"))
         chrome_driver_path = ChromeDriverManager().install()
-        
-
         self.driver= webdriver.Chrome(chrome_driver_path, options=options)
-        
         self.wait = WebDriverWait(self.driver,8)
         
  
