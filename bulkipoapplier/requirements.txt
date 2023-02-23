@@ -1,5 +1,4 @@
 amqp==1.4.9
-anyjson==0.3.3
 asgiref==3.6.0
 async-generator==1.10
 attrs==22.2.0
@@ -12,7 +11,6 @@ collection==0.1.6
 colorama==0.4.6
 dj-database-url==1.2.0
 Django==3.2.17
-django-admin-searchable-dropdown==1.2
 django-celery==3.3.1
 django-selenium==0.9.8
 einops==0.2.0
@@ -23,9 +21,6 @@ gunicorn==20.1.0
 h11==0.14.0
 idna==3.4
 kombu==3.0.37
-mysqlclient==2.1.0
-numpy==1.21.6
-opencv-python==4.7.0.68
 orderedpy==0.0.2
 outcome==1.2.0
 packaging==23.0
@@ -53,4 +48,4 @@ typing==3.7.4.3
 typing_extensions==4.4.0
 urllib3==1.26.14
 webdriver-manager==3.8.5
-wsproto==1.2.0
+
