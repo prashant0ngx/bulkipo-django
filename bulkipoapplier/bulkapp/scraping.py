@@ -6,31 +6,21 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.select import Select
-
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
 # import Driver installer
-from webdriver_manager.firefox import GeckoDriverManager
-from webdriver_manager.core.utils import read_version_from_cmd, PATTERN
+
 class web_driver( ):  
     def open_browser(self):
-        options = webdriver.FirefoxOptions()
-        options.add_argument("--headless=new")
-        options.add_argument("--window-size=1920,1080")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        version = read_version_from_cmd("/usr/bin/firefox-bin --version",PATTERN["firefox"])
-        if version:
-            options.binary_location = GeckoDriverManager(version=36.0).install()
-        else:
-            options.binary_location = GeckoDriverManager().install()
+        options = FirefoxOptions()
+        options.add_argument("--headless")
         self.driver = webdriver.Firefox(options=options)
+        self.driver = webdriver.Firefox()
         self.wait = WebDriverWait(self.driver, 10)
-        
- 
+        self.driver.maximize_window()
 
 def login(dp,username,password):
     web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-login")))
