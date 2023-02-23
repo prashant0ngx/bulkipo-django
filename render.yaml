@@ -1,5 +1,4 @@
-base: "python:3.9-slim-buster"
-  steps:
+steps:
     - setup: true
     - run: |
         apt-get update && \
