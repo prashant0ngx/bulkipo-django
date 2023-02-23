@@ -1,0 +1,41 @@
+# Render YAML
+# Use the latest version of the Python 3.9 environment
+# and enable automatic updates for security patches
+# and critical software updates.
+env:
+  PYTHON_VERSION: "3.7.1"
+  AUTO_UPDATE: true
+
+# Build instructions
+build:
+  # Use the official Python 3.9 Docker image as the base image
+  # and install dependencies, including Chrome and the Chrome driver.
+  # Also, print the Chrome version for debugging purposes.
+  base: "python:3.9-slim-buster"
+  steps:
+    - setup: true
+    - run: |
+        apt-get update && \
+        apt-get install -y curl gnupg wget unzip && \
+        curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o chrome.deb && \
+        apt-get update && \
+        apt-get install ./chrome.deb -y --no-install-recommends && \
+        rm chrome.deb && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/* && \
+        google-chrome --version
+    - run: |
+        apt-get purge -y curl gnupg wget unzip && \
+        apt-get autoremove -y && \
+        rm -rf /var/lib/apt/lists/*
+
+# Start command
+# Replace "app.py" with the actual name of your application file
+start:
+  # Set the environment variables
+  # and run the Python script.
+  cmd: gunicorn app:app
+  env:
+    CHROMEDRIVER_PATH: "/app/chromedriver"
+    GOOGLE_CHROME_BIN: "/app/.apt/usr/bin/google-chrome"
+  web: gunicorn app:app
