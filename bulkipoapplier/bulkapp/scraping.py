@@ -17,19 +17,22 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 
 
-class web_driver( ):  
+class web_driver():  
+    #find $PWD -type f -name file4.txt 
     def open_browser(self):
         options = FirefoxOptions()
-        options.add_argument("--headless")
-        options.add_argument("--window-size=1920,1080")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
+        options.headless = True
+        os.environ['MOZ_HEADLESS'] = '1'
         path = os.environ.get('FIREFOX_BIN')
-        self.driver = webdriver.Firefox(executable_path=path,options=options)
+        options.set_capability(
+            "moz:firefoxOptions", {
+                "binary": path,
+            },
+        )
         self.driver = webdriver.Firefox(options=options)
         self.wait = WebDriverWait(self.driver, 10)
-        self.driver.maximize_window()
+
+    
 
 def login(dp,username,password):
     web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-login")))
