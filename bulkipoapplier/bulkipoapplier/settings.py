@@ -104,14 +104,14 @@ WSGI_APPLICATION = 'bulkipoapplier.wsgi.application'
 #   }
 #}
 
+ 
+
 DATABASES= {
     "default": dj_database_url.parse(
-        'postgres://bulkipdb_user:VxocnPFMYXVhAzlryjnEq5L6DubdkebX@dpg-cfrh4gmn6mphhm2mkqcg-a.oregon-postgres.render.com/bulkipdb',
-        conn_max_age=600,
+        os.environ.get('DATABASE_URL'),
         conn_health_checks=True,
-
     )
-
+    
 }
 
 

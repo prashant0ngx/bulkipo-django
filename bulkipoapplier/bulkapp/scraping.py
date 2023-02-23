@@ -22,9 +22,9 @@ class web_driver( ):
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        version = read_version_from_cmd("firefox", PATTERN)
+        version = read_version_from_cmd("/usr/bin/firefox-bin --version",PATTERN["firefox"])
         if version:
-            options.binary_location = GeckoDriverManager(version=version).install()
+            options.binary_location = GeckoDriverManager(version=36.0).install()
         else:
             options.binary_location = GeckoDriverManager().install()
         self.driver = webdriver.Firefox(options=options)
