@@ -12,49 +12,23 @@ import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
 # import Driver installer
-from webdriver_manager.chrome import ChromeDriverManager
-
+from webdriver_manager.firefox import GeckoDriverManager
+from webdriver_manager.core.utils import read_version_from_cmd, PATTERN
 class web_driver( ):  
-    #for Heruko deployment
-    """ options = webdriver.ChromeOptions()
-    options.headless = False
-    # add user agent
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--no-sandbox")
-  
-    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    options.add_argument("--disable-gpu") """
-
-   
-    # function that open the browser
     def open_browser(self):
-        
-        # for Heruko deployment
-        # self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=self.options)
-        options = webdriver.ChromeOptions()
+        options = webdriver.FirefoxOptions()
         options.add_argument("--headless=new")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--start-maximized")
+        options.add_argument("--window-size=1920,1080")
         options.add_argument("--disable-gpu")
         options.add_argument("--no-sandbox")
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--disable-renderer-backgrounding")
-        options.add_argument("--disable-background-timer-throttling")
-        options.add_argument("--disable-backgrounding-occluded-windows")
-        options.add_argument("--disable-client-side-phishing-detection")
-        options.add_argument("--disable-crash-reporter")
-        options.add_argument("--disable-oopr-debug-crash-dump")
-        options.add_argument("--no-crash-upload")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--disable-low-res-tiling")
-        options.add_argument("--log-level=3")
-        options.add_argument("--silent")
-        options.binary_location=os.environ.get("GOOGLE_CHROME_BIN")
-        chrome_driver_path = ChromeDriverManager().install()
-        self.driver= webdriver.Chrome(chrome_driver_path, options=options)
-        self.wait = WebDriverWait(self.driver,8)
+        version = read_version_from_cmd("firefox", PATTERN)
+        if version:
+            options.binary_location = GeckoDriverManager(version=version).install()
+        else:
+            options.binary_location = GeckoDriverManager().install()
+        self.driver = webdriver.Firefox(options=options)
+        self.wait = WebDriverWait(self.driver, 10)
         
  
 
