@@ -1,6 +1,5 @@
 
-- setup: true
-- run: |
+run: |
     apt-get update && \
     apt-get install -y curl gnupg wget unzip && \
     curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o chrome.deb && \
@@ -10,7 +9,7 @@
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     google-chrome --version
-- run: |
+run: |
     apt-get purge -y curl gnupg wget unzip && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
