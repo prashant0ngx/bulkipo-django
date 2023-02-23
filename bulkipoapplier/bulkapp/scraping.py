@@ -1,34 +1,47 @@
 from time import sleep
-import threading
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.select import Select
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 
 import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
-# import Driver installer
-from webdriver_manager.firefox import GeckoDriverManager
 
-class web_driver():  
-    #find $PWD -type f -name file4.txt 
+
+username = os.getenv("LT_USERNAME")  # Replace the username
+access_key = os.getenv("LT_ACCESS_KEY")  # Replace the access key
+class web_driver( ):  
+   
+    # function that open the browser
     def open_browser(self):
-        options = FirefoxOptions()
-        options.headless = True
+        # install the driver
+        desired_caps = {
+            'LT:Options': {
+                "build": "bulkipon",  # Change your build name here
+                "name": "bulkipo",  # Change your test name here
+                "platformName": "Windows 10",
+                "selenium_version": "4.0.0",
+                "console": 'true',  # Enable or disable console logs
+                "network": 'true',  # Enable or disable network logs
+                #Enable Smart UI Project
+                #"smartUI.project": "<Project Name>"
+            },
+            "browserName": "firefox",
+            "browserVersion": "latest",
+        }
+        self.driver = webdriver.Remote(
+            command_executor="http://{}:{}@hub.lambdatest.com/wd/hub".format(
+                username, access_key),
+            desired_capabilities=desired_caps)
 
-        os.environ['MOZ_HEADLESS'] = '1'
-        path = os.environ.get('FIREFOX_BIN')
-        binary = FirefoxBinary(path)
-        self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(),firefox_binary=binary,options=options)
-        self.wait = WebDriverWait(self.driver, 10)
-
-    
+        
+        self.wait = WebDriverWait(self.driver,8)
+        
+ 
 
 def login(dp,username,password):
     web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-login")))
@@ -113,4 +126,4 @@ def applySuccess(qty,crn,pin):
     pin_submit.click()
      
 def close_browser():
-    web_driver.driver.close()
+    web_driver.driver.quit()
