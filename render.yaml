@@ -1,17 +1,4 @@
-# Render YAML
-# Use the latest version of the Python 3.9 environment
-# and enable automatic updates for security patches
-# and critical software updates.
-env:
-  PYTHON_VERSION: "3.7.1"
-  AUTO_UPDATE: true
-
-# Build instructions
-build:
-  # Use the official Python 3.9 Docker image as the base image
-  # and install dependencies, including Chrome and the Chrome driver.
-  # Also, print the Chrome version for debugging purposes.
-  base: "python:3.9-slim-buster"
+base: "python:3.9-slim-buster"
   steps:
     - setup: true
     - run: |
