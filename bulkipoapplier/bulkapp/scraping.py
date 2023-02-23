@@ -22,12 +22,12 @@ class web_driver( ):
         options = FirefoxOptions()
         options.add_argument("--headless")
         options.add_argument("--window-size=1920,1080")
-
-        
-        self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(),options=options)
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        path = os.environ.get('FIREFOX_BIN')
+        self.driver = webdriver.Firefox(executable_path=path,options=options)
         self.driver = webdriver.Firefox(options=options)
-
-      
         self.wait = WebDriverWait(self.driver, 10)
         self.driver.maximize_window()
 
