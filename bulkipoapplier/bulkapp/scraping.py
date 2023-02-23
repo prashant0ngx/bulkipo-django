@@ -7,13 +7,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 
 import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
 # import Driver installer
-from webdriver_manager.firefox import GeckoDriverManager
+
 
 
 
@@ -24,12 +25,8 @@ class web_driver():
         options.headless = True
         os.environ['MOZ_HEADLESS'] = '1'
         path = os.environ.get('FIREFOX_BIN')
-        options.set_capability(
-            "moz:firefoxOptions", {
-                "binary": path,
-            },
-        )
-        self.driver = webdriver.Firefox(options=options)
+        binary = FirefoxBinary(path)
+        self.driver = webdriver.Firefox(options=options,firefox_binary=binary)
         self.wait = WebDriverWait(self.driver, 10)
 
     
