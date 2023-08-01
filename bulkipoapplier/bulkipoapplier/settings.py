@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +26,7 @@ SECRET_KEY = 'django-insecure-szj1lb5t!fvi*ii%c76qyd20g@0%6cb!!)ow!#re))^)qv_jus
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bulkiponepal.onrender.com','onrender.com',]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -93,7 +92,7 @@ WSGI_APPLICATION = 'bulkipoapplier.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
 #       'NAME': 'bulkipo',
@@ -102,17 +101,18 @@ WSGI_APPLICATION = 'bulkipoapplier.wsgi.application'
 #      'HOST': '127.0.0.1',
 #       'PORT': '3306',
 #   }
-#}
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
  
 
-DATABASES= {
-    "default": dj_database_url.parse(
-        os.environ.get('DATABASE_URL'),
-        conn_health_checks=True,
-    )
-    
-}
+
 
 
 
@@ -155,7 +155,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'bulkapp/static'
 ]
 
 

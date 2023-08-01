@@ -1,6 +1,8 @@
 # Bulk Ipo Apply - Django
 Type in Cmd:
 
+
+
 Activate Virtual Environment:
 ` ipo\scripts\activate`
 

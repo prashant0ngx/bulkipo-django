@@ -5,41 +5,36 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.select import Select
-
-
+from webdriver_manager.chrome import ChromeDriverManager
 import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
 
+class web_driver():  
+    #django set options for webdriver
 
-username = os.getenv("LT_USERNAME")  # Replace the username
-access_key = os.getenv("LT_ACCESS_KEY")  # Replace the access key
-class web_driver( ):  
-   
-    # function that open the browser
+    # function that calls and runs the webdriver
     def open_browser(self):
-        # install the driver
-        desired_caps = {
-            'LT:Options': {
-                "build": "bulkipon",  # Change your build name here
-                "name": "bulkipo",  # Change your test name here
-                "platformName": "Windows 10",
-                "selenium_version": "4.0.0",
-                "console": 'true',  # Enable or disable console logs
-                "network": 'true',  # Enable or disable network logs
-                #Enable Smart UI Project
-                #"smartUI.project": "<Project Name>"
-            },
-            "browserName": "firefox",
-            "browserVersion": "latest",
-        }
-        self.driver = webdriver.Remote(
-            command_executor="http://{}:{}@hub.lambdatest.com/wd/hub".format(
-                username, access_key),
-            desired_capabilities=desired_caps)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        options.headless = False # run in background
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--window-size=1920x1080')
+        # add user agent
+        options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36')
+        options.add_argument("--start-maximized")
 
+        # drivermanager automatically installs latest driver and set path to that driver
+        # chrome_driver_path = ChromeDriverManager().install()        # call drivermanager according to browser you use
+        # function that calls and runs the webdriver
+        self.driver= webdriver.Chrome(options=options)        
+        self.wait = WebDriverWait(self.driver, 10)
+        self.driver.maximize_window()
+        self.driver.get("https://meroshare.cdsc.com.np/#/login")  # Open the Meroshare Login Page
+        self.driver.implicitly_wait(10)
         
-        self.wait = WebDriverWait(self.driver,8)
+
         
  
 
@@ -124,6 +119,9 @@ def applySuccess(qty,crn,pin):
     pin_submit = web_driver.driver.find_element(By.XPATH,"//*[@id='main']/div/app-issue/div/wizard/div/wizard-step[2]/div[2]/div/form/div[2]/div/div/div/button[1]")
     web_driver.wait.until(EC.element_to_be_clickable((By.XPATH,"//*[@id='main']/div/app-issue/div/wizard/div/wizard-step[2]/div[2]/div/form/div[2]/div/div/div/button[1]")))
     pin_submit.click()
+    sleep(1)
+    close_browser()
+
      
 def close_browser():
     web_driver.driver.quit()

@@ -17,6 +17,7 @@ def run_in_background(func):
 
 
 
+
 # Create your views here.
 @login_required(login_url='/login/')
 def index(request):
@@ -71,13 +72,13 @@ def dmatsdeleteall(request):
 #globally declared 
 @login_required(login_url='/login/')
 def applyipo(request):
+    #run in background thread
+    run_in_background(web_driver.open_browser(web_driver))
     if request.method == 'POST':
         aform = ApplyShareForm(request.POST)
         
         if aform.is_valid():
             aform.save()
-            web_driver.open_browser(web_driver)
-            web_driver.driver.get("https://meroshare.cdsc.com.np/#/login")
             sleep(2)
             ids = aform['username'].value()
             qty=aform['qty'].value()
@@ -117,10 +118,6 @@ def applyipo(request):
             return redirect('/applyipo/')
     else:
         aform = ApplyShareForm()
-        try:
-            close_browser()
-        except:
-            pass
         aform.fields['username'].queryset = DmatsAccount.objects.filter(user=request.user)
         context = {
             'aform':aform
