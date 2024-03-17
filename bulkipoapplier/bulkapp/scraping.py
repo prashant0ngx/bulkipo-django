@@ -26,7 +26,7 @@ class web_driver():
         options.add_argument("--start-maximized")
 
         # drivermanager automatically installs latest driver and set path to that driver
-        # chrome_driver_path = ChromeDriverManager().install()        # call drivermanager according to browser you use
+        #chrome_driver_path = ChromeDriverManager(version="114.0.5735.90").install()        # call drivermanager according to browser you use
         # function that calls and runs the webdriver
         self.driver= webdriver.Chrome(options=options)        
         self.wait = WebDriverWait(self.driver, 10)
