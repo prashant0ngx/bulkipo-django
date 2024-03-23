@@ -112,7 +112,7 @@ venv.bak/
 *.sqlite3
 *.db
 *.sqlite
-db.sqlite3
+*db.sqlite3
 db.sqlite
 db.sqlite3-journal
 db.sqlite-journal
