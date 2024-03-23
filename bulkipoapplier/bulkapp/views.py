@@ -6,17 +6,8 @@ from .forms import DmatsForm,ApplyShareForm
 from django.contrib.auth.decorators import login_required
 from .models import DmatsAccount, Share
 from .scraping import *
-import threading
 
-
-
-#run in background thread 
-def run_in_background(func):
-    thread = threading.Thread(target=func)
-    thread.start()
-
-
-
+from django.core.cache import cache
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -72,8 +63,7 @@ def dmatsdeleteall(request):
 #globally declared 
 @login_required(login_url='/login/')
 def applyipo(request):
-    #run in background thread
-    run_in_background(web_driver.open_browser(web_driver))
+  
     if request.method == 'POST':
         aform = ApplyShareForm(request.POST)
         
@@ -82,15 +72,19 @@ def applyipo(request):
             sleep(2)
             ids = aform['username'].value()
             qty=aform['qty'].value()
-
-            dmat = DmatsAccount.objects.filter(user=request.user).get(id=ids)
+            
+            request.session['ids'] = ids
+            request.session['qty'] = qty
+            # Fetch DmatsAccount data outside the loop
+            dmat = DmatsAccount.objects.select_related('user').get(id=ids, user=request.user)
+            
             capital=dmat.capital
             username = dmat.username
             password = dmat.password
-            
-            
+    
             try:
                 count = 0
+                web_driver.open_browser()
                 while web_driver.driver.current_url != "https://meroshare.cdsc.com.np/#/dashboard":
                     login(capital,username,password)
                     count+=1
@@ -101,24 +95,21 @@ def applyipo(request):
                         break
                 if web_driver.driver.current_url == "https://meroshare.cdsc.com.np/#/dashboard":
                     goto_asba()
-                    sleep(0.2)
                     response = redirect('/applyshareid/')
-                    response.set_cookie('ids',ids)
-                    response.set_cookie('qty',qty)
                     return response
                 else:
                     messages.error(request,'Could Not Login ! Check your credentials')
                     return redirect('/applyipo/')
             except:
                 messages.error(request,'Timeout Error ! Try again later')
-                close_browser()
+                web_driver.close_browser()
                 return redirect('/applyipo/')
         else:
             messages.error(request,aform.errors)
             return redirect('/applyipo/')
     else:
         aform = ApplyShareForm()
-        aform.fields['username'].queryset = DmatsAccount.objects.filter(user=request.user)
+        aform.fields['username'].queryset = DmatsAccount.objects.filter(user=request.user).select_related('user')
         context = {
             'aform':aform
         }
@@ -129,22 +120,22 @@ def applyipo(request):
 @login_required(login_url='/login/')
 def applyshareid(request):
     if request.method == 'POST':
-        ids = request.COOKIES.get('ids')
-
-        dmat = DmatsAccount.objects.filter(user=request.user).get(id=ids)
+        ids = request.session.get('ids')
+        qty = request.session.get('qty')
+        dmat = DmatsAccount.objects.filter(user=request.user, id=ids).first()
         crn = dmat.crn
         pin = dmat.pin
         shareId = request.POST.get('shareId')
-        qty = request.COOKIES.get('qty')
+        
         if web_driver.driver.current_url == 'https://meroshare.cdsc.com.np/#/asba':
             try:
                 ipo_selector(shareId)
             except:
-                messages.error(request,'Looks like you have already applied for this IPO Or No Ipos Listed')
+                messages.error(request,'Looks like you have already applied for this IPO \n Or No IPOS Avalable')
                 
                 return redirect('/applyipo/')
             try:
-                applySuccess(qty, crn, pin)
+                apply_success(qty, crn, pin)
                 msg = web_driver.driver.find_element(By.CLASS_NAME,"toast-message").text
                 if "success" in msg:
                     messages.success(request,msg)
@@ -159,8 +150,12 @@ def applyshareid(request):
                   
         return redirect('/applyipo/')
     else:
-        ids = request.COOKIES.get('ids')
-        ipos = open_ipo_lister()
+        ids = request.session.get('ids')
+        ipos = cache.get('ipos')  # Check cache for ipos
+        if not ipos:
+            ipos = open_ipo_lister()
+            cache.set('ipos', ipos, timeout=3600)  # Cache ipos for 1 hour
+        
         messages.success(request,'Select the IPO you want to apply for')
         context = {
             'ipos':ipos,  

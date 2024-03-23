@@ -112,9 +112,8 @@ class DmatsForm(forms.ModelForm):
         
 
         self.fields['capital'].widget =(
-          
-
             forms.Select(choices=CHOICES, attrs={'class': 'form-control',
+
                 'data-live-search':'true',
                 'data-filter':'true',
                 'required':'true',
@@ -161,11 +160,16 @@ class ApplyShareForm(forms.ModelForm):
         #change the label of the username field
         self.fields['username'].label = "Select Accounts"
         self.fields['username'].widget.attrs.update({'class': 'form-control',
-        'type':'number'
+        'type':'number',
+        'required':'true',
+        'pattern':'[0-9]'
         })
 
         self.fields['qty'].widget.attrs.update({'class': 'form-control',
-        'type':'number'
+        'placeholder':'Enter Quantity',
+        'type':'number',
+        'required':'true',
+        'pattern':'[0-9]{5}'
         })
 
      

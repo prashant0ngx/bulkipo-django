@@ -1,127 +1,115 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!----======== CSS ======== -->
-        <link rel="stylesheet" href="{% static '/css/style.css' %}">
-        <link rel="stylesheet" href="{% static '/css/alert.css' %}">
-        <link rel="stylesheet" href="{% static '/css/confirmloader.css' %}">
-        <!----===== Boxicons CSS ===== -->
-        <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-     
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <link rel="stylesheet" href="{% static '/css/alert.css' %}">
+    <link rel="stylesheet" href="{% static '/css/confirmloader.css' %}">
+    <!----===== Boxicons CSS ===== -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+
     <title> {% block title%} {% endblock%} </title>
 </head>
+
 <body>
-   
+
     <div id="loading-bar">
         <div id="loading-bar-fill"></div>
-      </div>
+    </div>
     {% if messages %}
     <div class="alert-container">
         <div class="alert" role="alert">
             <span class="close1">
                 <i class="bx bx-x-circle" id="close1"  align="right"></i>
-            </span>
-            
-                {% for message in messages %}
-                <div {% if message.tags %} class="{{message.tags}}" {% endif %}>
-                    {% endfor%}
-                    {%for message in messages %}
-                    <p class="alert-text">{{ message }}</p>  
-                    {% endfor %}  
-                </div>
-           
-            
-          
+            </span> {% for message in messages %}
+            <div {% if message.tags %} class="{{message.tags}}" {% endif %}>
+                {% endfor%} {%for message in messages %}
+                <p class="alert-text">{{ message }}</p>
+                {% endfor %}
+            </div>
+
+
+
         </div>
     </div>
-    {% endif %}
-
-{% comment %} {% if messages.error %}
+    {% endif %} {% comment %} {% if messages.error %}
     <div class="alert-container">
         <div class="alert" role="alert">
             <div class="error">
                 <span class="close1">
                     <i class="bx bx-x-circle" id="close1"  align="right"></i>
-                </span>
-                {% for message in error %}
-             
-                    <p class="alert-text">{{ message }}</p>
+                </span> {% for message in error %}
+
+                <p class="alert-text">{{ message }}</p>
 
                 {% endfor %}
             </div>
         </div>
     </div>
-{% endif %} {% endcomment %}
+    {% endif %} {% endcomment %}
 
 
-    
 
 
-   
+
+
     <script>
+        var alertContainers = document.querySelectorAll('.alert-container');
+        alertContainers.forEach(function(container) {
 
-    var alertContainers = document.querySelectorAll('.alert-container');
-    alertContainers.forEach(function(container) {
-        
-        container.querySelector('.close1').addEventListener('click', function() {
-            container.querySelector('.alert').style.display = 'none';
+            container.querySelector('.close1').addEventListener('click', function() {
+                container.querySelector('.alert').style.display = 'none';
+            });
+
+            setTimeout(function() {
+                container.querySelector('.alert').style.display = 'none';
+            }, 2000);
+
         });
 
-        setTimeout(function() {
-            container.querySelector('.alert').style.display = 'none';
-        }, 2000);
+        document.addEventListener("readystatechange", function() {
+            if (document.readyState === "loading") {
+                // Page is still loading, show loading bar
+                // Page has finished loading, hide loading bar
+                var loadingBarFill = document.getElementById("loading-bar-fill");
+                var width = 0;
+                var interval = setInterval(function() {
+                    width += Math.random() * 10;
+                    loadingBarFill.style.width = width + "%";
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        setTimeout(function() {
+                            loadingBarFill.style.width = "0%";
+                            document.getElementById("loading-bar").style.display = "none";
+                        }, 500);
+                    }
+                }, 10);
+            } else if (document.readyState === "complete") {
+                // Page has finished loading, hide loading bar
+                var loadingBarFill = document.getElementById("loading-bar-fill");
+                var width = 0;
+                var interval = setInterval(function() {
+                    width += Math.random() * 10;
+                    loadingBarFill.style.width = width + "%";
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        setTimeout(function() {
+                            loadingBarFill.style.width = "0%";
+                            document.getElementById("loading-bar").style.display = "none";
+                        }, 500);
+                    }
+                }, 10);
 
-    });
-
-    document.addEventListener("readystatechange", function() {
-  if (document.readyState === "loading") {
-    // Page is still loading, show loading bar
-    d// Page has finished loading, hide loading bar
-    var loadingBarFill = document.getElementById("loading-bar-fill");
-    var width = 0;
-    var interval = setInterval(function() {
-      width += Math.random() * 10;
-      loadingBarFill.style.width = width + "%";
-      if (width >= 100) {
-        clearInterval(interval);
-        setTimeout(function() {
-          loadingBarFill.style.width = "0%";
-          document.getElementById("loading-bar").style.display = "none";
-        }, 500);
-      }
-    }, 10);
-  } else if (document.readyState === "complete") {
-    // Page has finished loading, hide loading bar
-    var loadingBarFill = document.getElementById("loading-bar-fill");
-    var width = 0;
-    var interval = setInterval(function() {
-      width += Math.random() * 10;
-      loadingBarFill.style.width = width + "%";
-      if (width >= 100) {
-        clearInterval(interval);
-        setTimeout(function() {
-          loadingBarFill.style.width = "0%";
-          document.getElementById("loading-bar").style.display = "none";
-        }, 500);
-      }
-    }, 10);
-    
-  }
-});
-
-
-
-
-
-
-
-
+            }
+        });
     </script>
-    
+
     {% block content %} {% endblock %}
 </body>
+
 </html>

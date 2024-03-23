@@ -10,11 +10,14 @@ import os
 # disable logging for webdriver
 os.environ['WDM_LOG_LEVEL'] = '0'
 
-class web_driver():  
-    #django set options for webdriver
+class web_driver():
+    # Define class variables to hold the driver and wait instance
+    driver = None
+    wait = None
 
-    # function that calls and runs the webdriver
-    def open_browser(self):
+    @classmethod
+    def open_browser(cls):
+        #django set options for webdriver
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         options.headless = False # run in background
@@ -25,19 +28,27 @@ class web_driver():
         options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36')
         options.add_argument("--start-maximized")
 
-        # drivermanager automatically installs latest driver and set path to that driver
-        #chrome_driver_path = ChromeDriverManager(version="114.0.5735.90").install()        # call drivermanager according to browser you use
-        # function that calls and runs the webdriver
-        self.driver= webdriver.Chrome(options=options)        
-        self.wait = WebDriverWait(self.driver, 10)
-        self.driver.maximize_window()
-        self.driver.get("https://meroshare.cdsc.com.np/#/login")  # Open the Meroshare Login Page
-        self.driver.implicitly_wait(10)
-        
+        # Use ChromeDriverManager to automatically download and install ChromeDriver
+        cls.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+        cls.wait = WebDriverWait(cls.driver, 10)
+        cls.driver.maximize_window()
+        cls.driver.get("https://meroshare.cdsc.com.np/#/login")
+        cls.driver.implicitly_wait(15)
 
-        
- 
+    @classmethod
+    def get_driver(cls):
+        return cls.driver
+    
+    @classmethod
+    def close_browser(cls):
+        if cls.driver is not None:
+            cls.driver.close()
+            cls.driver.quit()
+            cls.driver = None
 
+
+
+    
 def login(dp,username,password):
     web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-login")))
     # Login
@@ -48,8 +59,12 @@ def login(dp,username,password):
     dpEntry.send_keys(dp)  # Enter the Dp Id
     dpEntry.send_keys(Keys.ENTER)  # Press Enter
     #send keys one by one
-    web_driver.driver.find_element(By.NAME ,"username").send_keys(username)
-    web_driver.driver.find_element(By.NAME ,"password").send_keys(password)
+    user_name_input=web_driver.driver.find_element(By.NAME ,"username")
+    user_name_input.clear()
+    user_name_input.send_keys(username)
+    password_input=web_driver.driver.find_element(By.NAME ,"password") 
+    password_input.clear()
+    password_input.send_keys(password)
     web_driver.driver.find_element(By.CLASS_NAME ,"sign-in").click()
 
 
@@ -64,9 +79,8 @@ def open_ipo_lister():
     try:
         web_driver.wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div')))
         web_driver.wait.until(EC.presence_of_element_located((By.TAG_NAME, "app-applicable-issue")))
-        web_driver.driver.implicitly_wait(1)
+        #web_driver.driver.implicitly_wait(1)
         IPOlist = web_driver.driver.find_elements(By.CLASS_NAME,"company-name")
-        
         for i in IPOlist:
             ipolist.append(i.text)
         return ipolist
@@ -101,7 +115,7 @@ def bank_selector():
 
 
         
-def applySuccess(qty,crn,pin):
+def apply_success(qty,crn,pin):
     appliedKitta = web_driver.driver.find_element(By.NAME,"appliedKitta")
     appliedKitta.send_keys(qty)
     crninput = web_driver.driver.find_element(By.NAME,"crnNumber")
@@ -120,8 +134,7 @@ def applySuccess(qty,crn,pin):
     web_driver.wait.until(EC.element_to_be_clickable((By.XPATH,"//*[@id='main']/div/app-issue/div/wizard/div/wizard-step[2]/div[2]/div/form/div[2]/div/div/div/button[1]")))
     pin_submit.click()
     sleep(1)
-    close_browser()
+    web_driver.close_browser()
 
      
-def close_browser():
-    web_driver.driver.quit()
+
