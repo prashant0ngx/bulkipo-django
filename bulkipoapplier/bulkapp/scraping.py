@@ -1,1 +1,0 @@
-#This file is deleted. If you want the full project you can contact me.
