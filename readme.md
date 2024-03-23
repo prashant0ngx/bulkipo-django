@@ -30,48 +30,31 @@ Once the environment is activated, you will see this result in the command promp
 #### Unix/MacOS Terminal : 
 ` (envname) ... $ `
 
-### 2.1  Django Installation:
 
-#### Windows cmd : 
-` py -m pip install Django `
 
-#### Unix/MacOS Terminal : 
-` python -m pip install Django `
+Change Directory to Project:
 
-Change directory to project where requirements.txt file lies:
+`cd bulkipo-django/bulkipoapplier`
+
 
 You can install all the required dependencies by running below command:
 
 ` pip install -r requirements.txt `
 
+#### Migrate:
+
+`python manage.py makemigrations`
+`python manage.py migrate`
+
+#### Create Super User:
+
+`py manage.py createsuperuser`
 
 #### Run the project:
-
 ` py manage.py runserver `
 
+this is not neccessary to do . it is just for freeze dependencies
+### Freeze Requirements file:
 
 
-
-
-
-
-
-
-
-
-
-Activate Virtual Environment:
-` ipo\scripts\activate`
-
-Change Directory to Project:
-
-`cd bulkipoapplier`
-
-Install Requirements:
-
-`pip install -r requirements.txt`
-
-Runserver:
-
-`python manage.py runserver`
-
+` pip freeze>requirements.txt`
